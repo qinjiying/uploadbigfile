@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.demo.dao.UserDao">
+	<resultMap id="UserMap" type="org.demo.model.po.UserPo">
+		<id column="id" property="id" />
+		<result column="user_name" property="userName" />
+		<result column="user_pwd" property="userPwd" />
+		<result column="user_role" property="userRole" />
+		<result column="user_status" property="userStatus" />
+	</resultMap>
+
+	<select id="getCountById" parameterType="long" resultType="int">
+		select count(*) from
+		t_user where id = #{id}
+	</select>
+
+	<update id="updateUser" parameterType="UserVo">
+		update
+		t_user set
+		user_status =
+		#{userStatus}
+		where id= #{id}
+	</update>
+
+	<update id="save" parameterType="UserVo">
+		INSERT INTO t_user (user_name,
+		user_pwd, user_role, user_status)
+		VALUES (#{userName}, #{userPwd}, '0',
+		'1')
+	</update>
+
+
+	<update id="updateSelfPwd">
+		update
+		t_user set
+		user_pwd =
+		#{0}
+		where
+		id= #{1}
+	</update>
+
+	<update id="updateUserPwd">
+		update
+		t_user set
+		user_pwd =
+		#{0}
+		where
+		id = #{1}
+	</update>
+
+	<select id="getUserList" resultMap="UserMap" parameterType="UserVo">
+		select id,user_name userName,user_status userStatus,user_role userRole
+		from t_user
+		where 1 =1
+		<if test="userName!=null">
+			and user_name like CONCAT('%','${userName}','%')
+		</if>
+		<if test="userStatus!=null">
+			and user_status = #{userStatus}
+		</if>
+		limit #{pageSize} offset (#{pageNum}-1)*#{pageSize}
+	</select>
+
+	<select id="getUserListCount" resultType="java.lang.Integer"
+		parameterType="UserVo">
+		select count(1)
+		from t_user
+		where 1 =1
+		<if test="userName!=null">
+			and user_name like CONCAT('%','${userName}','%')
+		</if>
+		<if test="userStatus!=null">
+			and user_status = #{userStatus}
+		</if>
+	</select>
+
+
+	<select id="login" resultMap="UserMap" parameterType="UserVo">
+		select
+		id,user_name userName,user_status userStatus,user_role userRole
+		from
+		t_user
+		where user_name=#{userName} and user_pwd=#{userPwd}
+	</select>
+
+	<select id="checkUser" parameterType="UserVo" resultType="int">
+		select
+		count(*) from
+		t_user where user_name = #{userName}
+	</select>
+	<select id="getPasswd" parameterType="int" resultType="String">
+		select
+		user_pwd from t_user where id=#{userId}
+	</select>
+</mapper>
