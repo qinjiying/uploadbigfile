@@ -12,8 +12,6 @@ Java web实现浏览器端大文件分片上传
 文件进度显示 显示文件的上传完成情况。
 UI等等。
 
-使用说明
-
 需要知识点
 基于spring mvc 多模块开发的。
 WebUploader，WebUploader是由Baidu WebFE(FEX)团队开发的一个简单的以HTML5为主，FLASH为辅的现代文件上传组件。
@@ -22,15 +20,13 @@ maven是一个基于JVM的构建工具。
 数据库整合的是postgres（可根据需求扩展）
 
 启动项目
-main方法直接运行：
+（1）导入项目成功后
+（2）在controler项目上右键容器运行
+ (3)然后用浏览器访问：http://localhost:8080
 
-(1)找到App启动类（win.pangniu.learn包下）
-(2)执行main方法。
-(3)然后用浏览器访问：http://localhost:9090
-
-tomcat运行：
-(1)执行命令gradle war。
-(2)在out目录下找到bphttp.war包。
+如果tomcat或者jetty运行：
+(1)执行命令mvn install。
+(2)在out目录下找到war包。
 (3)拷贝到tomcat，然后运行tomcat。
 (4)然后用浏览器访问：http://localhost:8080
 
@@ -54,9 +50,9 @@ tomcat运行：
 功能分析
 
 分块上传
-  分块上传可以说是我们整个项目的基础，像断点续传、暂停这些都是需要用到分块。 分块这块相对来说比较简单。前端是采用了webuploader，分块等基础功能已经封装起来，使用方便。 借助webUpload提供给我们的文件API,前端就显得异常简单。
+  分块上传可以说是我们整个项目的基础，像断点续传、暂停这些都是需要用到分块。 分块这块相对来说比较简单。前端是采用了webuploader（使用百度前端开源插件实现切片），分块等基础功能已经封装起来，使用方便。 借助webUpload提供给我们的文件API,前端就显得异常简单。
 
-    // 实例化wu
+    // 实例化
     var uploader = WebUploader.create({
         pick: {
             id: '#picker',
@@ -72,7 +68,7 @@ tomcat运行：
         swf: 'js/Uploader.swf',
         chunked: true,
         chunkSize: chunkSize, // 字节 1M分块
-        threads: 3,
+        threads: 3,//线程数
         server: 'index/fileUpload',
         auto: false,
 
@@ -179,3 +175,5 @@ tomcat运行：
             return new ResultVo<>(ResultStatus.ING_HAVE, missChunkList);
         }
     }
+	
+本项目参考和借鉴社区项目，如果有问题欢迎探讨！
